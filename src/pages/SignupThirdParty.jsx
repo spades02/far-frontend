@@ -50,22 +50,16 @@ const schema = z
     firstName: z.string().min(2, "First name must be at least 2 characters"),
     lastName: z.string().min(2, "Last name must be at least 2 characters"),
     phone: z.string().min(10, "Phone number must be at least 10 digits"),
-    email: z.string().email("Invalid email address"),
-    password: z.string().min(10, "Password must be at least 10 characters"),
-    confirmPassword: z
-      .string()
-      .min(10, "Password must be at least 10 characters"),
-    type: z.enum(["student", "preceptor"], {
-      errorMap: () => ({
-        message: "You need to specify if you are a student or preceptor.",
-      }),
+    type: z.enum(["student", "preceptor"]).refine((value) => value, {
+      message: "You need to specify if you are a student or preceptor.",
     }),
     referralCode: z.string().optional(),
-    terms: z.literal(true, {
-      errorMap: () => ({
+    terms: z
+      .boolean()
+      .default(false)
+      .refine((data) => data === true, {
         message: "You must agree to the terms and conditions",
       }),
-    }),
     referralSource: z
       .string()
       .nonempty("Please select where you heard about us."),
@@ -75,17 +69,13 @@ const schema = z
     path: ["confirmPassword"],
   });
 
-const Signup = () => {
-  const navigate = useNavigate();
+const SignupThirdParty = () => {
   const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
       firstName: "",
       lastName: "",
       phone: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
       type: "",
       referralCode: "",
       terms: false,
@@ -93,11 +83,8 @@ const Signup = () => {
     },
   });
 
-  const navigateToThirdParty = () => {
-    window.location.href = "/signup_third_party";
-  };
-
   const [referralPopoverOpen, setReferralPopoverOpen] = useState(false);
+  const navigate = useNavigate();
 
   function onSubmit(data) {
     console.log("Signup Data:", data);
@@ -111,36 +98,25 @@ const Signup = () => {
   }
 
   return (
-    <div className="flex items-center justify-center h-screen py-2 my-80 text-black">
+    <div className="flex items-center justify-center h-screen py-2 my-40 text-black">
       <div className="flex flex-col rounded-lg h-auto w-1/2 sm:w-1/4 p-10 shadow-lg border-1 drop-shadow-md">
         <h1 className="scroll-m-20 text-xl font-extrabold tracking-tight lg:text-2xl mb-6">
-          Sign up
+          You're Almost Done!
         </h1>
-
-        {/* Social Signup Buttons */}
-        <Button
-          onClick={navigateToThirdParty}
-          className="bg-indigo-600 w-full mb-2"
-        >
-          Sign up With Google
-        </Button>
-        <Button
-          onClick={navigateToThirdParty}
-          className="bg-indigo-600 w-full mb-2"
-        >
-          Sign up With Facebook
-        </Button>
-        <Button
-          onClick={navigateToThirdParty}
-          className="bg-indigo-600 w-full mb-4"
-        >
-          Sign up With LinkedIn
-        </Button>
-
-        <Separator className={"mb-4"} />
+        <p>
+          You are about to create a new account on Find a Rotation using a login
+          from Google (john@example.com)
+        </p>
+        <p className="mt-4">
+          Share a little more about yourself, and we'll show you more relevant
+          questions.
+        </p>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-4 mt-4"
+          >
             {/* First Name */}
             <FormField
               control={form.control}
@@ -186,56 +162,6 @@ const Signup = () => {
               )}
             />
 
-            {/* Email Address */}
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className={"text-black"}>Email Address</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="user@example.com"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage className={"text-red-500"} />
-                </FormItem>
-              )}
-            />
-
-            {/* Password */}
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className={"text-black"}>Password</FormLabel>
-                  <FormControl>
-                    <Input type="password" placeholder="********" {...field} />
-                  </FormControl>
-                  <FormMessage className={"text-red-500"} />
-                </FormItem>
-              )}
-            />
-
-            {/* Confirm Password */}
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className={"text-black"}>
-                    Confirm Password
-                  </FormLabel>
-                  <FormControl>
-                    <Input type="password" placeholder="********" {...field} />
-                  </FormControl>
-                  <FormMessage className={"text-red-500"} />
-                </FormItem>
-              )}
-            />
             {/* User type */}
             <FormField
               control={form.control}
@@ -403,4 +329,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default SignupThirdParty;
