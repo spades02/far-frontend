@@ -92,7 +92,7 @@ const Login = () => {
             <Button
               className="bg-indigo-600 w-full mb-4"
               onClick={() => {
-                window.location.href = "/";
+                window.location.href = "/home";
               }}
             >
               Login

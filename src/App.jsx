@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import Home from "./pages/Home";
 import Results from "./pages/Results";
 import Listing from "./pages/Listing";
@@ -19,11 +24,14 @@ import Messages from "./pages/Messages";
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/results" element={<Results />} />
-      <Route path="/listing" element={<Listing />} />
+      <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/home" element={<Home />} />
+
+      {/* The rest of your routes */}
+      <Route path="/results" element={<Results />} />
+      <Route path="/listing" element={<Listing />} />
       <Route path="/signup_third_party" element={<SignupThirdParty />} />
       <Route path="/welcome_student" element={<WelcomeStudent />} />
       <Route path="/welcome_preceptor" element={<WelcomePreceptor />} />
@@ -33,6 +41,11 @@ function App() {
       <Route path="/student_profile" element={<StudentProfile />} />
       <Route path="/edit_profile" element={<EditProfile />} />
       <Route path="/messages" element={<Messages />} />
+      <Route path="/edit_student_profile" element={<EditStudentProfile />} />
+      <Route
+        path="/edit_preceptor_profile"
+        element={<EditPreceptorProfile />}
+      />
       {/* Add more routes as needed */}
     </Routes>
   );
